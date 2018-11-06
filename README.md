@@ -7,6 +7,8 @@ Ansible operator to configure an OpenShift Dedicated cluster
 
         git clone https://github.com/aweiteka/opsconfig-operator.git
         cd opsconfig-operator
+1. Create project
+        oc new-project opsconfig
 1. Apply objects
 
         oc create -f deploy/crds/ops_v1v1alpha1_opsconfig_crd.yaml
@@ -20,21 +22,21 @@ Ansible operator to configure an OpenShift Dedicated cluster
 
 ## Hack it
 
-**Prerequisite:** Step #1 above
+**Prerequisite:** Steps #1 #2 above
 
 1. Create objects. NOTE: we will not be creating the `operator.yaml` object.
 
-        oc create -f deploy/crds/ops_v1v1alpha1_opsconfig_crd.yaml
+        oc create -f deploy/crds/ops_v1alpha1_opsconfig_crd.yaml
         oc create -f deploy/test/manifests.yaml
 1. Modify `watches.yaml` file to point to local playbook.yaml file in this repo
 
           role: /path/to/my/playbook.yaml
-1. Create a development environment following the [ansible operator user guide](https://github.com/operator-framework/operator-sdk/blob/master/doc/ansible/user-guide.md)
+1. Create a development environment following the [ansible operator user guide](https://github.com/operator-framework/operator-sdk/blob/master/doc/ansible/user-guide.md).
 
-        operator-sdk up local --namespace myproject
+        operator-sdk up local --namespace opsconfig
 1. Create CR object.
 
-        oc create -f deploy/crds/ops_v1v1alpha1_opsconfig_cr.yaml
+         oc create -f deploy/test/ops_v1alpha1_opsconfig_cr.yaml
 1. Modify roles and apply to minishift environment
 1. Test until satisfied
 1. Revert role path change in `watches.yaml`
@@ -42,6 +44,20 @@ Ansible operator to configure an OpenShift Dedicated cluster
 
         operator-sdk build quay.io/aweiteka/opsconfig-operator:v0.0.4
         docker push quay.io/aweiteka/opsconfig-operator:v0.0.4
+
+## Troubleshooting
+
+When developing playbooks run them with `ansible-playbook`. Getting output from a failed `operator-sdk` job is a pain. This error has very little information:
+
+```
+ERRO[0059] error from ansible-runner: exit status 2      component=runner job=3747895247646406351 name=post-install namespace=opsconfig
+```
+
+The ansible stdout is found at this path on the workstation running `operator-sdk`. This is very challenging to get to when running in a pod.
+
+```
+/tmp/ansible-operator/runner/ops.openshift.com/v1alpha1/Opsconfig/opsconfig/post-install/artifacts/<JOB>/stdout
+```
 
 ## TODO
 
