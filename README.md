@@ -47,7 +47,7 @@ Ansible operator to configure an OpenShift Dedicated cluster
 
 ## Troubleshooting
 
-When developing playbooks run them with `ansible-playbook`. Getting output from a failed `operator-sdk` job is a pain. This error has very little information:
+When developing playbooks run them with `ansible-playbook`. Getting output from a failed `operator-sdk` job is a pain ([resolution](https://github.com/operator-framework/operator-sdk/pull/713)). This error has very little information:
 
 ```
 ERRO[0059] error from ansible-runner: exit status 2      component=runner job=3747895247646406351 name=post-install namespace=opsconfig
