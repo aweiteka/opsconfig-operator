@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opsconfig-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: opsconfig-operator
+  template:
+    metadata:
+      labels:
+        name: opsconfig-operator
+    spec:
+      serviceAccountName: opsconfig-operator
+      containers:
+        - name: opsconfig-operator
+          # Replace this with the built image name
+          image: quay.io/aweiteka/opsconfig-operator:v0.0.3
+          ports:
+          - containerPort: 60000
+            name: metrics
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: OPERATOR_NAME
+              value: "opsconfig-operator"

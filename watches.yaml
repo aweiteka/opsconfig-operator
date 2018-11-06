@@ -1,0 +1,8 @@
+---
+- version: v1alpha1
+  group: ops.openshift.com
+  kind: Opsconfig
+# CONTAINER packaged path
+  playbook: /opt/ansible/playbook.yaml
+# LOCAL development
+# playbook: /path/to/my/playbook.yaml

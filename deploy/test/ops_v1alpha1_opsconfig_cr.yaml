@@ -1,0 +1,12 @@
+apiVersion: ops.openshift.com/v1alpha1
+kind: Opsconfig
+metadata:
+  name: post-install
+  annotations:
+    ansible.operator-sdk/reconcile-period: "30s"
+spec:
+  clusterviewers:
+    - aweiteka
+    - joe
+    - mary
+    - james
