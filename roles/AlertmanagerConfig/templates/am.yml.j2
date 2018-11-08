@@ -1,0 +1,33 @@
+global:
+route:
+  receiver: chat-webhook
+  # By default, 4 hrs. Can be adjusted
+  repeat_interval: 6h
+  routes:
+  - receiver: pagerduty
+    match:
+      severity: critical
+  - receiver: deadmansswitch
+    match:
+      alertname: DeadMansSwitch
+    repeat_interval: 5m
+  group_by: [cluster, severity]
+
+receivers:
+- name: pagerduty
+  pagerduty_configs:
+  - service_key: {{ amc_openshift_cluster_operator_pd }}
+- name: chat-webhook
+  slack_configs:
+  - api_url: {{ amc_slack_url }}
+    username: 'alertbot'
+    # Raw jinja blocks so that the Go templating can be evaulated
+    title: {{ '{% raw %} \'{{ .GroupLabels.cluster}} {{ .GroupLabels.severity }}  ({{ len .Alerts }})\' {% endraw %}\n' }}
+    # Loops through each alert and gives some more info about it
+    text:
+      {{ '{% raw %} \'{{ range .Alerts }}
+        (Job: {{ .Labels.job }} Pod: {{ .Labels.pod }} Alert: {{ .Labels.alertname }} SOP: https://github.com/openshift/ops-sop/tree/master/v4/alerts/{{ .Labels.alertname }}.asciidoc)
+       {{ end }}\' {% endraw %}\n' }}
+# FIXME null receiver. Separate monitoring cluster should alert on
+#   ALERTS{alertname="DeadMansSwitch"} < 1
+- name: deadmansswitch

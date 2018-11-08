@@ -16,7 +16,7 @@ spec:
       containers:
         - name: opsconfig-operator
           # Replace this with the built image name
-          image: quay.io/aweiteka/opsconfig-operator:v0.0.3
+          image: quay.io/aweiteka/opsconfig-operator:v0.0.4
           ports:
           - containerPort: 60000
             name: metrics

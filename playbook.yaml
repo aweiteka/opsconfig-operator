@@ -4,5 +4,5 @@
   tasks:
   - import_role:
       name: Rbac
-#  - import_role:
-#      name: AlertmanagerConfig
+  - import_role:
+      name: AlertmanagerConfig

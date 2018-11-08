@@ -1,0 +1,12 @@
+---
+- set_fact:
+    alertmanager_config: "{{ lookup('template', './am.yml.j2') }}"
+
+- name: Create alertmanager-main secret file
+  shell: 'echo "{{ alertmanager_config }}" | oc create secret generic alertmanager-main --from-file=alertmanager.yaml=/dev/stdin --dry-run=true -o yaml'
+  register: oc_secret_file
+  no_log: True
+
+- name: Apply alertmanager-main secret
+  shell: 'echo "{{ oc_secret_file.stdout }}"'
+  no_log: True
